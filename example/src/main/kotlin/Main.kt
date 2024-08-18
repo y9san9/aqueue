@@ -21,7 +21,7 @@ suspend fun main() {
     val duration1 = measureTime {
         natural.mapInAQueue(
             key = { it },
-            action = { delay(100); it }
+            transform = { delay(100); it }
         ).collect()
     }
     println("First: $duration1")
@@ -32,7 +32,7 @@ suspend fun main() {
     val duration2 = measureTime {
         natural.mapInAQueue(
             key = { Unit },
-            action = { delay(100); it }
+            transform = { delay(100); it }
         ).collect()
     }
     println("Second: $duration2")
@@ -46,7 +46,7 @@ suspend fun main() {
     val duration3 = measureTime {
         natural.mapInAQueue(
             key = { it % 2 },
-            action = { delay(100); it }
+            transform = { delay(100); it }
         ).collect()
     }
     println("Third: $duration3")
@@ -57,7 +57,7 @@ suspend fun main() {
     val duration4 = measureTime {
         natural.mapInAQueue(
             queue = singleThreadedQueue,
-            action = {
+            transform = {
                 Thread.sleep(100)
                 it
             }
