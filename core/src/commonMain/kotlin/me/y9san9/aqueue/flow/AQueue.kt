@@ -37,7 +37,7 @@ public fun <TRequest, TResponse> Flow<TRequest>.mapInAQueue(
 public fun <TRequest, TResponse> Flow<TRequest>.mapInAQueue(
     key: (TRequest) -> Any? = { null },
     context: CoroutineContext = EmptyCoroutineContext,
-    queue: AQueue<TRequest, TResponse> = AQueue(),
+    queue: AQueue = AQueue(),
     action: suspend (TRequest) -> TResponse,
 ): Flow<TResponse> {
     val bound = AQueue.Bound(key, context, queue, action)

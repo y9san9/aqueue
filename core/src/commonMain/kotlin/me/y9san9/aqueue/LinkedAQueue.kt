@@ -4,11 +4,13 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlin.coroutines.CoroutineContext
+import kotlin.js.JsName
 
 /**
  * Creates a default implementation of [AQueue]
  */
-public fun <TRequest, TResponse> AQueue(): AQueue<TRequest, TResponse> {
+@JsName("aQueue")
+public fun AQueue(): AQueue {
     return LinkedAQueue()
 }
 
@@ -17,7 +19,7 @@ public fun <TRequest, TResponse> AQueue(): AQueue<TRequest, TResponse> {
  * It is kind of like LinkedList works, because every job saves reference
  * to the previous job.
  */
-public class LinkedAQueue<TRequest, TResponse> : AQueue<TRequest, TResponse> {
+public class LinkedAQueue : AQueue {
     private val pendingMap = PendingMap()
 
     /**
@@ -28,7 +30,7 @@ public class LinkedAQueue<TRequest, TResponse> : AQueue<TRequest, TResponse> {
      * @param context The context that is used to launch new coroutines. You may limit parallelism using context
      * @param action The action to perform with [request]
      */
-    override suspend fun execute(
+    override suspend fun <TRequest, TResponse> execute(
         request: TRequest,
         key: Any?,
         context: CoroutineContext,

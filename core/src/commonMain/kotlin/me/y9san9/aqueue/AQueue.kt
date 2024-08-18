@@ -6,7 +6,7 @@ import kotlin.coroutines.EmptyCoroutineContext
 /**
  * Asynchronous Queue with fine-grained control over concurrency
  */
-public interface AQueue<TRequest, TResponse> {
+public interface AQueue {
 
     /**
      * Executes [request] with fine-grained control over concurrency
@@ -16,12 +16,25 @@ public interface AQueue<TRequest, TResponse> {
      * @param context The context that is used to launch new coroutines. You may limit parallelism using context
      * @param action The action to perform with [request]
      */
-    public suspend fun execute(
+    public suspend fun <TRequest, TResponse> execute(
         request: TRequest,
         key: Any? = null,
         context: CoroutineContext = EmptyCoroutineContext,
         action: suspend (TRequest) -> TResponse
     ): TResponse
+
+    /**
+     * Creates an Asynchronous Queue that has all parameters provided except
+     * of the request itself.
+     */
+    public fun <TRequest, TResponse> bind(
+        key: (TRequest) -> Any? = { null },
+        context: CoroutineContext = EmptyCoroutineContext,
+        queue: AQueue = AQueue(),
+        action: suspend (TRequest) -> TResponse,
+    ): Bound<TRequest, TResponse> {
+        return Bound(key, context, queue, action)
+    }
 
     /**
      * Asynchronous Queue that has all parameters provided except
@@ -35,7 +48,7 @@ public interface AQueue<TRequest, TResponse> {
     public class Bound<TRequest, TResponse>(
         private val key: (TRequest) -> Any? = { null },
         private val context: CoroutineContext = EmptyCoroutineContext,
-        private val queue: AQueue<TRequest, TResponse> = AQueue(),
+        private val queue: AQueue = AQueue(),
         private val action: suspend (TRequest) -> TResponse,
     ) {
         /**
@@ -52,7 +65,7 @@ public interface AQueue<TRequest, TResponse> {
         public fun copy(
             key: (TRequest) -> Any? = this.key,
             context: CoroutineContext = this.context,
-            queue: AQueue<TRequest, TResponse> = this.queue,
+            queue: AQueue = this.queue,
             action: suspend (TRequest) -> TResponse = this.action,
         ): Bound<TRequest, TResponse> {
             return Bound(key, context, queue, action)

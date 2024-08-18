@@ -4,5 +4,5 @@ plugins {
 
 dependencies {
     implementation(libs.coroutines)
-    implementation(projects.aqueue)
+    implementation(projects.core)
 }

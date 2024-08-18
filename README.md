@@ -15,9 +15,11 @@ I am happy to review pull requests, but I don't plan any further development.
 
 ## Install
 
+Replace $version with the latest version from `Releases` Tab.
+
 ```kotlin
 dependencies {
-    implementation("me.y9san9.aqueue:core:1.0.0")
+    implementation("me.y9san9.aqueue:core:$version")
 }
 ```
 

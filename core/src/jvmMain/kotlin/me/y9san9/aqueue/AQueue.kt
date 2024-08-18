@@ -22,7 +22,7 @@ public fun <TRequest, TResponse> AQueue.Bound.Companion.fixedThreadPool(
     name: String,
     key: (TRequest) -> Any? = { null },
     context: CoroutineContext = EmptyCoroutineContext,
-    queue: AQueue<TRequest, TResponse> = AQueue(),
+    queue: AQueue = AQueue(),
     action: suspend (TRequest) -> TResponse,
 ): AQueue.Bound<TRequest, TResponse> {
     val fixedContext = newFixedThreadPoolContext(numberOfThreads, name)
@@ -47,7 +47,7 @@ public fun <TRequest, TResponse> AQueue.Bound.Companion.fixedThreadPool(
 public fun <TRequest, TResponse> AQueue.Bound.Companion.io(
     key: (TRequest) -> Any? = { null },
     context: CoroutineContext = EmptyCoroutineContext,
-    queue: AQueue<TRequest, TResponse> = AQueue(),
+    queue: AQueue = AQueue(),
     action: suspend (TRequest) -> TResponse,
 ): AQueue.Bound<TRequest, TResponse> {
     return AQueue.Bound(
