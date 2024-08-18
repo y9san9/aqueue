@@ -20,8 +20,8 @@ import kotlin.coroutines.EmptyCoroutineContext
  * @param action The action to perform with request
  */
 public fun <T, R> Flow<T>.mapInAQueue(
-    key: (T) -> Any? = { null },
     queue: AQueue = AQueue(),
+    key: suspend (T) -> Any? = { null },
     context: CoroutineContext = EmptyCoroutineContext,
     action: suspend (T) -> R,
 ): Flow<R> {
@@ -46,10 +46,10 @@ public fun <T, R> Flow<T>.mapInAQueue(
  */
 public fun <T> Flow<T>.launchInAQueue(
     scope: CoroutineScope,
-    key: (T) -> Any? = { null },
     queue: AQueue = AQueue(),
+    key: suspend (T) -> Any? = { null },
     context: CoroutineContext = EmptyCoroutineContext,
     action: suspend (T) -> Unit
 ): Job {
-    return mapInAQueue(key, queue, context, action).launchIn(scope)
+    return mapInAQueue(queue, key, context, action).launchIn(scope)
 }
