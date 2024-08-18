@@ -23,16 +23,16 @@ public class LinkedAQueue : AQueue {
     private val pendingMap = PendingMap()
 
     /**
-     * Executes [action] with fine-grained control over concurrency
+     * Executes [block] with fine-grained control over concurrency
      *
      * @param key It is guaranteed that requests with the same [key] will be executed consecutively
      * @param context The context that is used to launch new coroutines. You may limit parallelism using context
-     * @param action The action to perform
+     * @param block The action to perform
      */
     override suspend fun <T> execute(
         key: Any?,
         context: CoroutineContext,
-        action: suspend () -> T
+        block: suspend () -> T
     ): T = coroutineScope {
         val scope = this
 
@@ -41,7 +41,7 @@ public class LinkedAQueue : AQueue {
                 pendingMap.putPending(key) { pendingJob ->
                     launch(context) {
                         pendingJob?.join()
-                        val result = runCatching { action() }
+                        val result = runCatching { block() }
                         pendingMap.finishPendingJob(key, coroutineContext.job)
                         continuation.resumeWith(result)
                     }

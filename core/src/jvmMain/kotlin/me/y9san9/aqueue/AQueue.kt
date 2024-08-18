@@ -4,7 +4,6 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.newFixedThreadPoolContext
 import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 
 /**
  * Asynchronous Queue that uses [newFixedThreadPoolContext] to create a queue
@@ -22,11 +21,11 @@ public fun AQueue.Companion.fixedThreadPool(
     val fixedContext = newFixedThreadPoolContext(numberOfThreads, name)
 
     return object : AQueue {
-        override suspend fun <T> execute(key: Any?, context: CoroutineContext, action: suspend () -> T): T {
+        override suspend fun <T> execute(key: Any?, context: CoroutineContext, block: suspend () -> T): T {
             return queue.execute(
                 key = key,
                 context = context + fixedContext,
-                action = action
+                block = block
             )
         }
     }
@@ -39,11 +38,11 @@ public fun AQueue.Companion.fixedThreadPool(
  */
 public fun AQueue.Companion.io(queue: AQueue = AQueue()): AQueue {
     return object : AQueue {
-        override suspend fun <T> execute(key: Any?, context: CoroutineContext, action: suspend () -> T): T {
+        override suspend fun <T> execute(key: Any?, context: CoroutineContext, block: suspend () -> T): T {
             return queue.execute(
                 key = key,
                 context = context + Dispatchers.IO,
-                action = action
+                block = block
             )
         }
     }

@@ -82,20 +82,18 @@ See [this example](example/src/main/kotlin/Main.kt) to play around with AQueue.
 /**
  * Asynchronous Queue with fine-grained control over concurrency
  */
-interface AQueue<TRequest, TResponse> {
+interface AQueue {
 
     /**
-     * Executes [request] with fine-grained control over concurrency
+     * Executes [block] with fine-grained control over concurrency
      *
-     * @param request The request to execute
      * @param key It is guaranteed that requests with the same [key] will be executed consecutively
      * @param context The context that is used to launch new coroutines. You may limit parallelism using context
-     * @param action The action to perform with [request]
+     * @param block The action to perform
      */
-    suspend fun execute(
-        request: TRequest,
+    suspend fun <T> execute(
         key: Any? = null,
         context: CoroutineContext = EmptyCoroutineContext,
-        action: suspend (TRequest) -> TResponse
-    ): TResponse
+        block: suspend () -> T
+    ): T
 ```
