@@ -97,3 +97,38 @@ interface AQueue {
         block: suspend () -> T
     ): T
 ```
+
+## Flow Extensions
+
+`AQueue` might be very useful when working with flows, because there is no
+quite good API in `kotlinx.coroutines` to parallel Flows based on `key`,
+but with this library it is very simple
+
+```kotlin
+// Parallel upstream and return results in a flow
+val flow: Flow<B> = upstream.mapInAQueue(key = { optional }) { loadSomething(...) }
+
+// Parallel upstream and return Job
+val job: Job = upstream.launchInAQueue(key = { optional }) { loadSomething(...) }
+```
+
+## Coroutine Builder Extensions
+
+You may often want to `launch` execution of `AQueue` or use it with `async`
+which is also supported by the library:
+
+```kotlin
+val queue = AQueue()
+queue.launch(scope, key = optional) { loadSomething(...) }
+queue.async(scope, key = optional) { loadSomething(...) }
+```
+
+## Dispatchers Integration
+
+It is possible to use concurrent `Dispatchers` to construct AQueue.
+If you are on JVM, use will have the following utility functions:
+
+```kotlin
+val queue = AQueue.io() // Constructs AQueue that launches new coroutines on Dispatchers.IO
+val queue = AQueue.fixedThreadPool(12) // Constructs AQueue that has a pool of 12 threads
+```
