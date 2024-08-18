@@ -37,7 +37,6 @@ public fun AQueue.Companion.fixedThreadPool(
  *
  * @param queue The queue that is used to parallel requests
  */
-@DelicateCoroutinesApi
 public fun AQueue.Companion.io(queue: AQueue = AQueue()): AQueue {
     return object : AQueue {
         override suspend fun <T> execute(key: Any?, context: CoroutineContext, action: suspend () -> T): T {
