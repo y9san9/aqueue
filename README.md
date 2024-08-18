@@ -58,6 +58,17 @@ suspend fun main() {
         key = { it % 2 },
         action = { delay(1_000) }
     ).collect()
+
+    // This will be executed in roughly 1 second because of single-threaded pool
+    val singleThreadedQueue = AQueue.fixedThreadPool(numberOfThreads = 1, name = "Test")
+    
+    natural.mapInAQueue(
+        queue = singleThreadedQueue,
+        action = {
+            Thread.sleep(100)
+            it
+        }
+    ).collect()
 }
 ```
 
