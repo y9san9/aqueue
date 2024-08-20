@@ -10,9 +10,6 @@ telegram bot. Messages in such case should be processed
 in parallel. However, if there are multiple messages received
 from the same user, they must be processed consequently.
 
-Note that the project is feature complete. 
-I am happy to review pull requests, but I don't plan any further development.
-
 ## Install
 
 Replace $version with the latest version from `Releases` Tab.
