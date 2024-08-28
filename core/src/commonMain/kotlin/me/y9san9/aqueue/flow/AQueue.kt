@@ -1,10 +1,7 @@
 package me.y9san9.aqueue.flow
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import me.y9san9.aqueue.AQueue
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
@@ -31,6 +28,7 @@ public fun <T, R> Flow<T>.mapInAQueue(
                 runCatching {
                     queue.execute(key(element), context) { transform(element) }
                 }.onFailure { throwable ->
+                    ensureActive()
                     val flow = flow { recover(throwable) }
                     flow.collect(::send)
                 }.onSuccess { element ->
