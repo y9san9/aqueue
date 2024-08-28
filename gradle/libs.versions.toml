@@ -4,7 +4,7 @@ kotlin = "2.0.0"
 coroutines = "1.8.0"
 maven-publish = "0.29.0"
 
-aqueue = "1.0.8"
+aqueue = "1.0.9"
 
 [libraries]
 
