@@ -15,8 +15,8 @@ import kotlin.coroutines.EmptyCoroutineContext
  */
 public fun <T> AQueue.async(
     scope: CoroutineScope,
-    start: CoroutineStart = CoroutineStart.DEFAULT,
     key: Any? = null,
+    start: CoroutineStart = CoroutineStart.DEFAULT,
     context: CoroutineContext = EmptyCoroutineContext,
     block: suspend () -> T
 ): Deferred<T> {

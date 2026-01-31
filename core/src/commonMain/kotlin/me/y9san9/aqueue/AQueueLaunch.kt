@@ -2,6 +2,7 @@ package me.y9san9.aqueue
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
@@ -17,12 +18,12 @@ import kotlin.coroutines.EmptyCoroutineContext
  */
 public fun AQueue.launch(
     scope: CoroutineScope,
-    start: CoroutineStart = CoroutineStart.DEFAULT,
     key: Any? = null,
+    start: CoroutineStart = CoroutineStart.DEFAULT,
     context: CoroutineContext = EmptyCoroutineContext,
     block: suspend () -> Unit
-) {
-    scope.launch(start = start) {
+): Job {
+    return scope.launch(start = start) {
         execute(key, context, block)
     }
 }
